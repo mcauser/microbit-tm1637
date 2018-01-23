@@ -1,6 +1,6 @@
 # Scroll
 
-* Display strings on the 4 digit display, scrolling left to right
+* Display strings on the 4 digit display, scrolling right to left
 
 ## Install
 

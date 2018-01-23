@@ -10,3 +10,5 @@ while True:
     sleep(2000)
     tm.scroll('123456789')
     sleep(2000)
+    tm.scroll(list(tm1637._SEG))
+    sleep(2000)

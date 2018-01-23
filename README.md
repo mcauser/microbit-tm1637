@@ -185,7 +185,8 @@ Shorthand for write(encode_string()).
 show(string, colon=False)
 ```
 
-Display a string on the display, scrolling from the left to right, speed adjustable.
+Display a string on the display, scrolling from the right to left, speed adjustable.
+String starts off-screen and scrolls until off-screen at 4 FPS by default.
 ```
 scroll(string, delay=250)
 ```
