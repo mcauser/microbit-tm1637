@@ -164,12 +164,12 @@ Display a number in hexadecimal format 0000 through FFFF.
 hex(val)
 ```
 
-Display a number -999 through 9999.
+Display a number -999 through 9999, right aligned.
 ```
 number(num)
 ```
 
-Display 2 independent numbers on either side of the (optional) colon.
+Display 2 independent numbers on either side of the (optional) colon, with leading zeros.
 ```
 numbers(num1, num2, colon=True)
 ```
@@ -181,6 +181,7 @@ temperature(num)
 
 Show a string on the display.
 Shorthand for write(encode_string()).
+Limited to first 4 characters.
 ```
 show(string, colon=False)
 ```
