@@ -17,7 +17,7 @@ For example, the [Grove - 4 Digit Display module](http://wiki.seeed.cc/Grove-4-D
 
 There are multiple methods which can produce the same result. Here are a few examples to get you started.
 
-```
+```python
 from microbit import *
 from tm1637 import TM1637
 tm = TM1637(clk=pin1, dio=pin2)
