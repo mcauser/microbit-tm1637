@@ -1,5 +1,5 @@
 from microbit import *
-from tm1637 import TM1637
+from tm1637 import TM1637, _SEG
 
 tm = TM1637(clk=pin1, dio=pin2)
 
@@ -10,5 +10,5 @@ while True:
     sleep(2000)
     tm.scroll('123456789')
     sleep(2000)
-    tm.scroll(list(tm1637._SEG))
+    tm.scroll(list(_SEG))
     sleep(2000)
