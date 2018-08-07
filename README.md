@@ -236,3 +236,7 @@ If you flash a `.hex` file from an online editor, it may block `main.py` from ru
 Your script is executed like the main script, however, you can't `ufs get` and `ufs put` changes.
 
 If you board is throwing MemoryErrors and you are unable to continue, start fresh by copying one of the MicroPython firmware `.hex` files to the MICROBIT mounted filesystem.
+
+## License
+
+Licensed under the [MIT License](http://opensource.org/licenses/MIT).
