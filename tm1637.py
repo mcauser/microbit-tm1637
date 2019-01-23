@@ -64,14 +64,7 @@ class TM1637(object):
 		self._c.write_digital(1)
 		self._c.write_digital(0)
 
-	def brightness(self, val=None):
-		if val is None:
-			return self._b
-		self._b = max(0, min(val, 7))
-		self._data_cmd()
-		self._dsp_ctrl()
-
-	def write(self, segments, pos=0):
+	def _write(self, segments, pos):
 		if not 0 <= pos <= 3:
 			raise ValueError("Position out of range")
 		self._data_cmd()
@@ -80,15 +73,15 @@ class TM1637(object):
 		for seg in segments:
 			self._write_byte(seg)
 		self._stop()
-		self._dsp_ctrl()
+                self._dsp_ctrl()
 
-	def encode_string(self, string):
+	def _encode_string(self, string):
 		segments = bytearray(len(string))
 		for i in range(len(string)):
-			segments[i] = self.encode_char(string[i])
+			segments[i] = self._encode_char(string[i])
 		return segments
 
-	def encode_char(self, char):
+	def _encode_char(self, char):
 		o = ord(char)
 		if o == 32:
 			return _SEG[36] # space
@@ -102,45 +95,68 @@ class TM1637(object):
 			return _SEG[o-87] # lowercase a-z
 		if o >= 48 and o <= 57:
 			return _SEG[o-48] # 0-9
-		raise ValueError("Character out of range: {:d} '{:s}'".format(o, chr(o)))
+		raise ValueError("Character out of range:" +\
+                                 " {:d} '{:s}'".format(o, chr(o)))
+
+########################################################################
+############## unused methods below this line can be culled ############
+########################################################################
+
+	def brightness(self, val=None):
+		if val is None:
+			return self._b
+		self._b = max(0, min(val, 7))
+		self._data_cmd()
+		self._dsp_ctrl()
+
+	def write(self, segments, pos=0):
+                self._write(segments, pos)
+                
+        def encode_string(self, string):
+                self._encode_string(string)
+
+        def encode_char(self, char):
+	        self._encode_char(char)
 
 	def hex(self, val):
 		string = '{:04x}'.format(val & 0xffff)
-		self.write(self.encode_string(string))
+		self._write(self._encode_string(string), 0)
 
 	def number(self, num):
 		num = max(-999, min(num, 9999))
 		string = '{0: >4d}'.format(num)
-		self.write(self.encode_string(string))
+		self._write(self._encode_string(string), 0)
 
 	def numbers(self, num1, num2, colon=True):
 		num1 = max(-9, min(num1, 99))
 		num2 = max(-9, min(num2, 99))
-		segments = self.encode_string('{0:0>2d}{1:0>2d}'.format(num1, num2))
+		segments = self._encode_string( '{0:0>2d}{1:0>2d}'.\
+                                                format(num1, num2))
 		if colon:
 			segments[1] |= 0x80 # colon on
-		self.write(segments)
+		self._write(segments, 0)
 
 	def temperature(self, num):
 		if num < -9:
-			self.write([0x38, 0x3F]) # LO
+			self._write([0x38, 0x3F], 0) # LO
 		elif num > 99:
-			self.write([0x76, 0x06]) # HI
+			self._write([0x76, 0x06], 0) # HI
 		else:
 			string = '{0: >2d}'.format(num)
-			self.write(self.encode_string(string))
-		self.write([_SEG[38], _SEG[12]], 2) # degrees C
+			self._write(self._encode_string(string), 0)
+		self._write([_SEG[38], _SEG[12]], 2) # degrees C
 
 	def show(self, string, colon=False):
-		segments = self.encode_string(string)
+		segments = self._encode_string(string)
 		if len(segments) > 1 and colon:
 			segments[1] |= 128
-		self.write(segments[:4])
+		self._write(segments[:4], 0)
 
 	def scroll(self, string, delay=250):
-		segments = string if isinstance(string, list) else self.encode_string(string)
+		segments = string if isinstance(string, list) else \
+                           self._encode_string(string)
 		data = [0] * 8
 		data[4:0] = list(segments)
 		for i in range(len(segments) + 5):
-			self.write(data[0+i:4+i])
+			self._write(data[0+i:4+i], 0)
 			sleep(delay)
